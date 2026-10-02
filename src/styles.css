@@ -1,0 +1,832 @@
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app-shell {
+  --counter-size: min(82vw, 440px);
+  --counter-action-offset: 238px;
+  --app-bg: #f5f7f4;
+  --app-text: #18221b;
+  --app-muted: #78837a;
+  --app-line: #e2e8e2;
+  --app-soft: #eef2ee;
+  --app-accent: #426d53;
+  --app-accent-soft: #e9f0ea;
+  position: relative;
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+  padding: max(26px, env(safe-area-inset-top)) clamp(18px, 5vw, 68px) 26px;
+  background: var(--app-bg);
+  color: var(--app-text);
+  transition: background-color 260ms ease, color 260ms ease;
+}
+
+.app-shell[data-mode="dark"] {
+  --app-bg: #111713;
+  --app-text: #eef3ef;
+  --app-muted: #9ca9a0;
+  --app-line: #2a352e;
+  --app-soft: #1b241e;
+  --app-accent: #8fc69e;
+  --app-accent-soft: #203126;
+}
+
+.fixed-controls {
+  position: fixed;
+  z-index: 10;
+  top: 22px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.quiet-icon.MuiIconButton-root {
+  width: 42px;
+  height: 42px;
+  color: var(--app-muted);
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.quiet-icon.MuiIconButton-root:hover {
+  background: var(--app-soft);
+  color: var(--app-text);
+}
+
+.quiet-icon.MuiIconButton-root:active {
+  transform: scale(0.94);
+}
+
+.quiet-icon.Mui-focusVisible,
+.calendar-arrow.Mui-focusVisible,
+.view-toggle.Mui-focusVisible,
+.date-tab.Mui-focusVisible,
+.month-day.Mui-focusVisible {
+  outline: 3px solid color-mix(in srgb, var(--app-accent) 55%, transparent);
+  outline-offset: 3px;
+}
+
+.theme-glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: theme-arrive 280ms ease both;
+}
+
+.calendar-area {
+  width: min(100%, 830px);
+  margin: clamp(18px, 4vh, 34px) auto 0;
+}
+
+.calendar-toolbar {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.calendar-period.MuiTypography-root {
+  margin-top: 3px;
+  color: var(--app-text);
+  font-size: 0.92rem;
+  font-weight: 550;
+  letter-spacing: -0.02em;
+}
+
+.month-period.MuiTypography-root {
+  min-width: 128px;
+  margin: 0;
+  text-align: center;
+  font-size: 1.03rem;
+}
+
+.month-navigation {
+  min-width: 0;
+}
+
+.calendar-arrow.MuiIconButton-root {
+  width: 34px;
+  height: 34px;
+  color: var(--app-muted);
+  transition: color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.calendar-arrow.MuiIconButton-root:hover {
+  background: var(--app-soft);
+  color: var(--app-text);
+}
+
+.calendar-arrow.Mui-disabled {
+  color: var(--app-muted);
+  opacity: 0.35;
+}
+
+.date-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  padding: 3px 2px 9px;
+  scroll-behavior: smooth;
+}
+
+.date-strip::-webkit-scrollbar,
+.message-list::-webkit-scrollbar {
+  display: none;
+}
+
+.date-tab.MuiButtonBase-root {
+  position: relative;
+  display: flex;
+  min-width: 76px;
+  min-height: 82px;
+  flex: 1 0 76px;
+  flex-direction: column;
+  gap: 5px;
+  border: 1px solid var(--app-line);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--app-muted);
+  transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+
+.date-tab.MuiButtonBase-root:hover {
+  border-color: color-mix(in srgb, var(--app-accent) 45%, var(--app-line));
+  color: var(--app-text);
+}
+
+.date-tab.MuiButtonBase-root:active {
+  transform: scale(0.97);
+}
+
+.date-tab.MuiButtonBase-root.is-selected {
+  border-color: var(--app-accent);
+  background: var(--app-accent);
+  color: #fff;
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--app-accent) 18%, transparent);
+}
+
+.app-shell[data-mode="dark"] .date-tab.MuiButtonBase-root.is-selected {
+  color: #142019;
+}
+
+.date-weekday {
+  font-size: 0.59rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+
+.date-number {
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.date-count {
+  color: var(--app-accent);
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.date-tab.is-selected .date-count {
+  color: inherit;
+  opacity: 0.8;
+}
+
+.weekday-strip,
+.month-grid {
+  display: grid;
+  width: min(100%, 640px);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.weekday-strip {
+  margin-bottom: 4px;
+  color: var(--app-muted);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.month-grid {
+  gap: 4px;
+}
+
+.month-empty {
+  min-height: 58px;
+}
+
+.month-day.MuiButtonBase-root {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 58px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  background: transparent;
+  color: var(--app-text);
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.month-day.MuiButtonBase-root:hover:not(.Mui-disabled) {
+  border-color: var(--app-line);
+  background: var(--app-soft);
+}
+
+.month-day.MuiButtonBase-root:active:not(.Mui-disabled) {
+  transform: scale(0.96);
+}
+
+.month-day.MuiButtonBase-root.is-today {
+  border-color: color-mix(in srgb, var(--app-accent) 44%, transparent);
+}
+
+.month-day.MuiButtonBase-root.is-selected {
+  border-color: var(--app-accent);
+  background: var(--app-accent);
+  color: #fff;
+}
+
+.app-shell[data-mode="dark"] .month-day.MuiButtonBase-root.is-selected {
+  color: #142019;
+}
+
+.month-day.MuiButtonBase-root.Mui-disabled {
+  color: var(--app-muted);
+  opacity: 0.32;
+}
+
+.month-day-number {
+  font-size: 0.9rem;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+}
+
+.month-day-count {
+  color: var(--app-accent);
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.month-day.is-selected .month-day-count {
+  color: inherit;
+  opacity: 0.8;
+}
+
+.counter-stage {
+  display: flex;
+  min-height: 390px;
+  flex: 1 0 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0 12px;
+}
+
+.counter-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.counter-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 22px;
+}
+
+.app-shell[data-calendar="week"] .counter-stage {
+  position: relative;
+  display: block;
+  min-height: 390px;
+  flex: 1 0 auto;
+  padding: 0;
+  pointer-events: none;
+}
+
+.app-shell[data-calendar="week"] .counter-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+}
+
+.app-shell[data-calendar="week"] .counter-actions {
+  position: absolute;
+  top: calc(50% + var(--counter-action-offset));
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  pointer-events: auto;
+}
+
+.counter-target.MuiButtonBase-root {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  width: var(--counter-size);
+  aspect-ratio: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  overflow: hidden;
+  border: 1px solid var(--app-line);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--app-soft) 46%, transparent);
+  color: var(--app-text);
+  transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 220ms ease, background-color 260ms ease, box-shadow 220ms ease;
+}
+
+.counter-target.MuiButtonBase-root:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--app-accent) 58%, var(--app-line));
+  box-shadow: 0 16px 42px color-mix(in srgb, var(--app-accent) 9%, transparent);
+}
+
+.counter-target.MuiButtonBase-root:active {
+  transform: scale(0.985);
+}
+
+.counter-ring {
+  position: absolute;
+  z-index: -1;
+  width: 82%;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--app-accent) 10%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  transition: transform 300ms ease, border-color 260ms ease;
+}
+
+.counter-target:hover .counter-ring {
+  transform: scale(1.035);
+  border-color: color-mix(in srgb, var(--app-accent) 20%, transparent);
+}
+
+.counter-kicker {
+  padding: 6px 14px;
+  border: 1px solid var(--app-line);
+  border-radius: 999px;
+  background: var(--app-accent-soft);
+  color: var(--app-accent);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+}
+
+.counter-value.MuiTypography-root {
+  font-size: clamp(5.2rem, 16vw, 8rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  animation: count-arrive 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.counter-date {
+  color: var(--app-accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.counter-hint.MuiTypography-root {
+  margin-top: 0;
+  color: var(--app-muted);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-align: center;
+}
+
+.counter-hint span {
+  padding: 0 5px;
+  color: var(--app-accent);
+}
+
+.undo-button.MuiButton-root {
+  min-height: 34px;
+  margin-top: 5px;
+  color: var(--app-accent);
+  font-size: 0.78rem;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.undo-button.MuiButton-root:hover {
+  background: var(--app-accent-soft);
+}
+
+.undo-button.Mui-disabled {
+  color: var(--app-muted);
+  opacity: 0.48;
+}
+
+.app-shell[data-calendar="month"] .counter-stage {
+  min-height: 315px;
+}
+
+.app-shell[data-calendar="month"] .counter-target.MuiButtonBase-root {
+  width: min(68vw, 340px);
+}
+
+.app-shell[data-calendar="month"] .counter-value.MuiTypography-root {
+  font-size: clamp(4.4rem, 12vw, 6.4rem);
+}
+
+.notes-drawer-paper.MuiDrawer-paper {
+  --app-bg: #f5f7f4;
+  --app-text: #18221b;
+  --app-muted: #78837a;
+  --app-line: #e2e8e2;
+  --app-soft: #eef2ee;
+  --app-accent: #426d53;
+  --app-accent-soft: #e9f0ea;
+  width: min(100vw, 460px);
+  border: 0;
+  border-left: 1px solid var(--app-line);
+  background: var(--app-bg);
+  color: var(--app-text);
+  background-image: none;
+  transition: background-color 260ms ease, color 260ms ease;
+}
+
+.notes-drawer-paper.MuiDrawer-paper.is-dark {
+  --app-bg: #111713;
+  --app-text: #eef3ef;
+  --app-muted: #9ca9a0;
+  --app-line: #2a352e;
+  --app-soft: #1b241e;
+  --app-accent: #8fc69e;
+  --app-accent-soft: #203126;
+}
+
+.notes-content {
+  display: flex;
+  height: 100%;
+  min-height: 100dvh;
+  flex-direction: column;
+  gap: 14px;
+  overflow: hidden;
+  padding: max(22px, env(safe-area-inset-top)) 22px max(16px, env(safe-area-inset-bottom));
+}
+
+.notes-heading {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notes-title.MuiTypography-root {
+  font-size: 1.45rem;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+}
+
+.message-list {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  padding: 10px 2px;
+  scrollbar-width: none;
+}
+
+.notes-empty.MuiTypography-root {
+  max-width: 250px;
+  margin: auto;
+  color: var(--app-muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  text-align: center;
+}
+
+.message-row {
+  display: flex;
+  justify-content: flex-end;
+  animation: message-arrive 220ms ease both;
+}
+
+.message-bubble {
+  width: min(100%, 92%);
+  padding: 13px 14px 7px;
+  border: 1px solid color-mix(in srgb, var(--app-accent) 14%, var(--app-line));
+  border-radius: 17px 17px 5px 17px;
+  background: var(--app-accent-soft);
+  color: var(--app-text);
+}
+
+.message-text.MuiTypography-root {
+  color: var(--app-text);
+  font-size: 0.91rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.message-link {
+  color: var(--app-accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--app-accent) 55%, transparent);
+  text-underline-offset: 2px;
+  overflow-wrap: anywhere;
+}
+
+.message-link:hover {
+  text-decoration-color: currentColor;
+}
+
+.message-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 7px;
+  color: var(--app-muted);
+}
+
+.message-meta > .MuiTypography-root {
+  font-size: 0.66rem;
+  line-height: 1.2;
+}
+
+.message-actions {
+  align-items: center;
+}
+
+.message-action.MuiIconButton-root {
+  width: 27px;
+  height: 27px;
+  color: var(--app-muted);
+  font-size: 0.98rem;
+}
+
+.message-action.MuiIconButton-root:hover {
+  background: color-mix(in srgb, var(--app-accent) 12%, transparent);
+  color: var(--app-text);
+}
+
+.message-edit-field .MuiInputBase-root {
+  align-items: flex-start;
+  padding: 9px 10px;
+  border-radius: 10px;
+  background: var(--app-bg);
+  color: var(--app-text);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.message-edit-field .MuiOutlinedInput-notchedOutline {
+  border-color: var(--app-line);
+}
+
+.message-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.message-edit-actions .MuiButton-root {
+  min-height: 30px;
+  color: var(--app-accent);
+  font-size: 0.75rem;
+}
+
+.note-composer {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-end;
+  gap: 7px;
+  padding: 7px 7px 7px 13px;
+  border: 1px solid var(--app-line);
+  border-radius: 18px;
+  background: var(--app-soft);
+  transition: border-color 180ms ease, background-color 260ms ease;
+}
+
+.note-composer:focus-within {
+  border-color: color-mix(in srgb, var(--app-accent) 55%, var(--app-line));
+}
+
+.composer-field .MuiInputBase-root {
+  padding: 5px 0;
+  color: var(--app-text);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.composer-field .MuiOutlinedInput-notchedOutline {
+  border: 0;
+}
+
+.composer-field textarea::placeholder {
+  color: var(--app-muted);
+  opacity: 0.85;
+}
+
+.send-note.MuiIconButton-root {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  background: var(--app-accent);
+  color: #fff;
+  transition: transform 180ms ease, background-color 180ms ease, opacity 180ms ease;
+}
+
+.notes-drawer-paper.is-dark .send-note.MuiIconButton-root {
+  color: #142019;
+}
+
+.send-note.MuiIconButton-root:hover {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--app-accent) 86%, #000);
+}
+
+.send-note.Mui-disabled {
+  background: color-mix(in srgb, var(--app-accent) 35%, var(--app-soft));
+  color: var(--app-muted);
+}
+
+@keyframes count-arrive {
+  from { opacity: 0.3; transform: translateY(8px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes theme-arrive {
+  from { opacity: 0.35; transform: rotate(-45deg) scale(0.8); }
+  to { opacity: 1; transform: rotate(0) scale(1); }
+}
+
+@keyframes message-arrive {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .app-shell {
+    --counter-size: min(86vw, 330px);
+    --counter-action-offset: 180px;
+    padding: max(14px, env(safe-area-inset-top)) 14px max(16px, env(safe-area-inset-bottom));
+  }
+
+  .fixed-controls {
+    top: max(10px, env(safe-area-inset-top));
+    left: 10px;
+    flex-direction: row;
+    gap: 2px;
+  }
+
+  .quiet-icon.MuiIconButton-root {
+    width: 38px;
+    height: 38px;
+  }
+
+  .calendar-area {
+    width: 100%;
+    margin-top: clamp(12px, 2.5vh, 20px);
+  }
+
+  .calendar-toolbar {
+    margin-bottom: 10px;
+  }
+
+  .month-period.MuiTypography-root {
+    min-width: 108px;
+    font-size: 0.94rem;
+  }
+
+  .date-tab.MuiButtonBase-root {
+    min-width: 72px;
+    min-height: 76px;
+    flex-basis: 72px;
+    border-radius: 13px;
+  }
+
+  .month-grid {
+    gap: 2px;
+  }
+
+  .month-empty {
+    min-height: 48px;
+  }
+
+  .month-day.MuiButtonBase-root {
+    min-height: 48px;
+    border-radius: 11px;
+  }
+
+  .counter-stage {
+    min-height: 0;
+    padding: clamp(32px, 7vh, 56px) 0 20px;
+  }
+
+  .app-shell[data-calendar="month"] .counter-stage {
+    min-height: 290px;
+    padding-top: 28px;
+  }
+
+  .app-shell[data-calendar="month"] .counter-target.MuiButtonBase-root {
+    width: min(76vw, 310px);
+  }
+
+  .counter-hint.MuiTypography-root {
+    max-width: 300px;
+    line-height: 1.7;
+  }
+
+  .notes-content {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .message-bubble {
+    width: min(100%, 96%);
+  }
+}
+
+@media (max-width: 1000px) {
+  .fixed-controls {
+    flex-direction: row;
+  }
+}
+
+@media (max-height: 700px) and (min-width: 601px) {
+  .app-shell {
+    --counter-size: min(58vh, 280px);
+    --counter-action-offset: 160px;
+  }
+
+  .calendar-area {
+    margin-top: 16px;
+  }
+
+  .counter-stage {
+    min-height: 310px;
+  }
+
+}
+
+@media (max-height: 520px) {
+  .app-shell {
+    --counter-size: min(52vh, 210px);
+    --counter-action-offset: 124px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
